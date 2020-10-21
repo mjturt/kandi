@@ -1,9 +1,9 @@
-# Bachelor's thesis: Linux-palvelinten tietoturvan parannus ja auditointi
+# Bachelor's thesis: Linux-palvelinten tietoturva
 
 Work in progress
 
-- Title: Linux-palvelinten tietoturvan parannus ja auditointi
-- Title in english: Linux server security hardening and auditing
+- Title: Linux-palvelinten tietoturvan
+- Title in english: Linux server security
 - Author: Maks Turtiainen
 - Year: 2020
 - Language: Finnish
