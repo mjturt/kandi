@@ -27,7 +27,6 @@ jobs:
         ssh_options: ''
         src: 'thesis.pdf'
         dest: ${{secrets.SSH_PATH}}
-      run: ls
 
     - name: Display status from deploy
       run: echo "${{ steps.deploy.outputs.status }}"
