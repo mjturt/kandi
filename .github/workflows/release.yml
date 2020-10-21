@@ -13,11 +13,11 @@ jobs:
       uses: actions/checkout@v1
 
     - name: Compile LaTeX document
-        uses: dante-ev/latex-action@master
-        with:
-          root_file: thesis.tex
-          working_directory: latex
-          args: '-pdf -latexoption=-file-line-error -latexoption=-interaction=nonstopmode -latexoption=-shell-escape'
+      uses: dante-ev/latex-action@master
+      with:
+        root_file: thesis.tex
+        working_directory: latex
+        args: '-pdf -latexoption=-file-line-error -latexoption=-interaction=nonstopmode -latexoption=-shell-escape'
 
     - name: Deploy
       uses: Pendect/action-rsyncer@v1.1.0
