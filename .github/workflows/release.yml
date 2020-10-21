@@ -15,10 +15,9 @@ jobs:
     - name: Compile LaTeX document
         uses: dante-ev/latex-action@master
         with:
-      with:
-        root_file: thesis.tex
-        working_directory: latex
-        args: '-pdf -latexoption=-file-line-error -latexoption=-interaction=nonstopmode -latexoption=-shell-escape'
+          root_file: thesis.tex
+          working_directory: latex
+          args: '-pdf -latexoption=-file-line-error -latexoption=-interaction=nonstopmode -latexoption=-shell-escape'
 
     - name: Deploy
       uses: Pendect/action-rsyncer@v1.1.0
