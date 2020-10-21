@@ -1,0 +1,72 @@
+\chapter{Kyberhyökkäyksiltä suojautuminen}\label{suojautuminen}
+
+Vaikka keskityn tutkielmassani ensisijaisesti Linux–palvelinten tietoturvan parantamiseen, monet yleiset keinot tietoturvan parantamiseen pätevät myös Linux–palvelinten kontekstissa joten käsittelen myös niitä lopuksi lyhyesti.
+
+\section{Salaus}\label{Salaus}
+Tallennustila ja tietoliikenne voidaan kryptografisesti salata. Salaamalla sekokielistä tietoa muutetaan muotoon, jossa vain tarvittavan avaimen haltija pystyy lukemaan tietoja selkokielisinä.
+
+Salaamalla tietoa voidaan estää päätymästä sellaisiin käsiin mihin se ei ole tarkoitettu. Salauksella vahvennetaan tietoturvaa CIA-mallin C-kohdan osalta. Salaamisella voidaan suojautua tietojen päätymiseltä vääriin käsiin esimerkiksi tietokoneen varkauden tai verkon kuuntelun yhteydessä.
+
+\subsection{Tallennustilan salaaminen}\label{tallennustilan_salaaminen}
+Tallennustilan tai yksittäisten tiedostojen salaamisella pyritään ehkäisemään tietojen päätyminen vääriin käsiin tilanteessa jossa laite, jolle tieto on tallennettu, päätyy tahoille joiden ei ole tarkoitus nähdä tietoja. Tilanne on tämä esimerkiksi hyökkäyksessä \ref{theft}. Tallennustilan tai tiedostojen salaamisella voidaan myös pyrkiä suojelemaan jotakin erittäin salaista osaa tiedoista jonka salausta pidetään purettuva vain silloin kun tietoja tarvitaan. Tälläisessä tapauksessa tietojen on mahdollista pysyä pois vääristä käsistä jopa silloin kun hyökkääjä on saanut muutoin täyden hallinnan tietoja säilyttävästä palvelimesta, kuten hyökkäyksissä \ref{backdoors}, \ref{remote_code_execution} ja \ref{bruteforce}.
+
+DMCrypt on Linux-kernelin levysalausjärjestelmä. Järjestelmä on osa laajempaa Device Mapper rajapintaa josta järjestelmän nimikin on johdettu (\textbf{D}evice \textbf{M}apper \textbf{crypt}). Device Mapper on rajapinta jolla voi osoittaa virtuaalisia laitetiedostoja fyysisiin laitetiedostoihin. Tätä teknologiaa DMCrypt hyödyntää salauksessaan. Varsinainen levyosion tai laitteet laitetiedosto on salattu ja sellaisenaan käyttökelvoton. Purkaessaan salauksen DMCrypt luo virtuaalisen laitetiedoston jossa tieto on selkokielisenä ja tämä virtuaalinen osio on valmis liitettäväksi järjestelmään.
+
+Cryptsetup on työkalu levysalauksien hallintaan DMCryptillä. Useita standardeja siitä, missä muodossa salatut osiot tulee olla on useita ja Cryptsetup tukee näistä LUKS:ia, loop-AES:ia, TrueCryptiä ja Microsoftin BitLockeria. Salatun osion muoto määrittelee esimerkiksi sen millainen osion alun salaamaton ylätunniste on. Ylätunniste kertoo lyhyesti ohjeet salauksen purkamiseen, esimerkiksi sen, mitä salausalgoritmia salaukseen on käytetty. Cryptsetup tukee myös ylätunnisteettomia nk. paljaita DMCrypt-osioita. LUKS:ia tyypillisesti suositellaan Linux-järjestelmän osioita salatessa.
+
+Ohjelmalistauksessa~\ref{alg:cryptsetup_salaus} esimerkki levyosion salaamisesta Cryptsetupilla käyttäen salausavaimena salasanaa. Salattava osio on lohkolaitetiedosto \textit{/dev/sda2} ja se on tarkoitus liittää hakemistopuun sijaintiin \textit{/home}.
+
+\begin{algorithm}[tbh]
+\begin{minted}{sh}
+# Ensin alustetaan osio LUKS-muotoon (syötä haluttu salasana)
+cryptsetup luksFormat /dev/sda2
+# Puretaan juuri salatun osion salaus ja anna sille virtuaalinen nimi
+cryptsetup open /dev/sda esim
+# Nyt virtuaalinen laitetiedosto on saatavilla polussa /dev/mapper/esim
+# Alustetaan tiedostojärjestelmä virtuaaliselle laitetiedostolle
+mkfs.ext4 /dev/mapper/esim
+# Nyt virtuaalisella laitetiedostolla on tiedostojärjestelmä
+# ja sen voi liittää normaalisti hakemistopuuhun
+mount /dev/mapper/esim /home
+\end{minted}
+\caption{Levyosion salaus Cryptsetupilla.\label{alg:cryptsetup_salaus}}
+\end{algorithm}
+\newpage{}
+
+Tietoa voi salata myös tiedostotasolla. Tiedostotason salaukseen on useita työkaluja kuten eCryptFS ja EncFS. eCryptFS on toteutettu Linuxin kerneliin kuten DMCrypt. EncFS on käyttäjätilassa toimiva erillinen sovellus ja huomattavasti helppokäyttöisempi. EncFS:n käyttö on varsin suoraviivaista, ohjelmalistauksessa \ref{alg:encfs_salaus} salataan hakemisto \textit{/home/user/salattava} ja säilötään salattu data hakemistoon \textit{/home/user/.salattu}.
+
+\begin{algorithm}[tbh]
+\begin{minted}{sh}
+# Salatun hakemiston luonti ja olemassa olevan salatun
+# hakemiston salauksen purku tapahtuu samalla komennolla
+encfs /home/user/.salattu /home/user/salattava
+\end{minted}
+\caption{Levyosion salaus EncFS:llä.\label{alg:encfs_salaus}}
+\end{algorithm}
+\newpage{}
+
+\subsection{Tietoliikenteen salaaminen}\label{tietoliikenteen_salaaminen}
+
+Tietoliikenteen salaamisella pyritään ensisijaisesti suojautumaan hyökkäykseltä \ref{verkon_kuuntelu}. Useimmiten tietoliikenteen salaaminen on jonkin tiedonvälitykseen käytettävän protokollan tehtävä (esim. HTTP vs. HTTPS) ja merkityksellisintä turvallisen tiedonvälityksen kannalta on tehdä turvallisia sovellusvalintoja. Esimerkiksi on suositeltavaa tehdä Linux-palvelimen ylläpitotoimia etäyhteydellä ennemmin salatun SSH:n kuin salaamattoman Telnetin välityksellä.
+
+On myös mahdollista toteuttaa kokonaisvaltaisempaa tietoliikenteen salaamista tunneloimalla tietoliikenne jonkin salatun teknologian lävitse. Tällöin voidaan varmistua, että liikenne on salattua, vaikka käyttäjätasolla käytettäisiinkin protokollaa, joka ei tue salausta. Yleisin tähän tarkoitukseen käytetty teknologia on salattu VPN. Implementaatioita VPN:stä on lukuisia ja toiminta niiden välillä eroaa paljonkin. Linux-palvelinylläpidon näkökulmasta käytännöllisin implementaatio lienee OpenVPN.
+
+OpenVPN:n avulla voidaan TCP/UDP tasolla tunneloida kaikki tietoliikenne salatun IP-tunnelin ylitse.
+
+\section{SELinux}\label{selinux}
+SELinux (Security Enhanced Linux) on Red Hat Enterprise Linuxin\ldots
+
+\section{Kernelitason suojaus}\label{kernelitason_suojaus}
+Linuxin kerneli tarjoaa monia työkaluja suojella\ldots 
+
+\section{Eristys ja virtualisointi}\label{eristys_ja_virtualisointi}
+Vaikka Linux-kerneli tarjoaa keinoja eristää sovelluksia, on usein tarpeen toteuttaa eristys virtualisoinnin avulla.
+
+\subsection{Virtualisoinnin työkaluja}\label{virtualisoinnin_tyokaluja}
+Virtualisointi jaetaan useimmiten kahteen pääkategoriaan; kokonaiseen virtualisointiin jossa koko tietokoneen laitteisto simuloidaan sekä ns. paravirtualisointiin jossa ohjelmistot ajetaan omassa eristetyssä ympäristössä simuloimatta kuitenkaan tietokoneen komponentteja.
+Alustoja laitteiston virtualisointiin Linuxilla ovat mm. KVM (Kernel-based Virtual Machine), VMWare, VirtualBox, XEN, QEMU sekä helpottamaan virtualisoinnin ylläpitoa libvirtd.
+Paravirtualisointiin alustaja ovat mm. Docker, Vagrant ja Linuxin chroot-ympäristö.
+
+\section{Järjestelmän ja sovellusten konfiguraatio}\label{sovellusten_konfiguraatio}
+
+\subsection{Autentikaatio}\label{autentikaatio}
