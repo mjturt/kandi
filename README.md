@@ -2,7 +2,7 @@
 
 Work in progress
 
-- Title: Linux-palvelinten tietoturvan
+- Title: Linux-palvelinten tietoturva
 - Title in english: Linux server security
 - Author: Maks Turtiainen
 - Year: 2020

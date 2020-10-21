@@ -54,7 +54,9 @@ On myös mahdollista toteuttaa kokonaisvaltaisempaa tietoliikenteen salaamista t
 OpenVPN:n avulla voidaan TCP/UDP tasolla tunneloida kaikki tietoliikenne salatun IP-tunnelin ylitse.
 
 \section{Palomuurit}\label{palomuurit}
-Palomuuri on järjestelmä, jonka tarkoitus on estää asiaton pääsy verkkojen välillä. Useimmiten tämä toteutetaan
+Palomuuri (eng. Firewall) on järjestelmä, jonka tarkoitus on estää asiaton pääsy verkkojen välillä. Useimmiten tämä toteutetaan kokoelmalla erilaisia sääntöjä. Palomuureilla voidaan ennaltaehkäistä useita uhkia vastaan pienentämällä hyökkäyspinta-alaa esimerkiksi sulkemalla liikenne kokonaan tiettyihin portteihin tai tietyistä lähteistä. Palomuuria voi myös konfiguroida dynaamisesti, jolloin esimerkiksi kun hyökkäys \ref{dos} tai \ref{bruteforce} havaitaan, liikenne voidaan sulkea näistä lähteistä.
+
+Netfilter on ohjelmistokehys Linux-kernelissä joka on tarkoitettu moniin verkkoyhteyksiin liityvien asioiden hallintaan ja tällä kernelin palomuuri on implementoitu. IPTables on käyttäjätason sovellus hallinnoimaan kernelin palomuurin sääntöjä ja tulee useimpien Linux-jakeluiden mukana. IPTablesin seuraaja on NFTables, mutta siihen että, NFTables otettaisiin laajempaan käyttöön kuin IPTables voi mennä vielä vuosia. IPTablesin syntaksi on vasta-alkajille usein sekava, joten palomuurin hallintaan on myös käyttäjäystävällisempiä ratkaisuja kute UFW.
 
 \section{SELinux}\label{selinux}
 SELinux (Security Enhanced Linux) on Red Hat Enterprise Linuxin\ldots
@@ -73,3 +75,30 @@ Paravirtualisointiin alustaja ovat mm. Docker, Vagrant ja Linuxin chroot-ympäri
 \section{Järjestelmän ja sovellusten konfiguraatio}\label{sovellusten_konfiguraatio}
 
 \subsection{Autentikaatio}\label{autentikaatio}
+Autentikaatioprosessia vahventamalla voidaan suojautua esimerkiksi hyökkäykseltä \ref{bruteforce}. Perinteiset keinot suojautua, kuten tarpeeksi vahvan salasanan valitseminen ovat toki tärkeitä, mutta autentikaatioprosessia on myös mahdollista vahventaa järjestelmän konfiguraatioilla ja työkaluilla. Liian heikot salasanat voi olla myös mahdollisia purkaa mikäli hyökkääjä on saanut salasanojen tiivisteet käsiinsä \textit{/etc/shadow}-tiedostosta.
+
+SSH on yleisin protokolla hallinnoida Linux-palvelimia etänä ja estämällä root-käyttäjän kirjautumisen SSH:n ylitse pienentää huomattavasti hyökkäyspinta-alaa. Pääkäyttäjän \textit{root} käyttäjätunnus on aina sama useimmissa UNIX-tyyppisissä järjestelmissä, joten hyökkääjän tarvitsee enää arvata vain salasana hyökkäyksen onnistumiseksi. Ennen \textit{root} käyttäjän kirjautumisen estoa jokin toinen käyttäjä tulisi lisätä \textit{/etc/sudoers}-tiedostoon, jotta operointi pääkäyttäjäoikeuksilla onnistuisi silti SSH:n välityksellä.
+
+\begin{algorithm}[tbh]
+\begin{minted}{sh}
+# Ensin lisätään "esimerkki"-käyttäjä /etc/sudoers:n
+# ja annetaan tälle täydet oikeudet
+echo 'esimerkki ALL=(ALL) ALL' >> /etc/sudoers
+# Tämän jälkeen avataan SSH-palvelimen konfiguraatiotiedosto
+vi /etc/ssh/sshd_config
+# Muutetaan rivi:
+PermitRootLogin Yes
+# Riviksi:
+PermitRootLogin No
+# Tämän jälkeen SSH-palvelin tulisi käynnistää uudelleen
+# esimerkiksi komennolla (riippuu jakelusta)
+systemctl restart sshd
+\end{minted}
+\caption{Root-käyttäjän kirjautumisen estäminen\label{alg:disable_root_login}}
+\end{algorithm}
+\newpage{}
+
+Järjestelmän käyttäjien salasanoille on myös mahdollista asettaa minimivaatimuksia. PAM.cracklib.
+
+\section{Monitorointi}\label{monitorointi}
+Monitoroinnin tarkoitus ei ole niinkään suojautua kyberhyökkäykseltä vaan ennemminkin keino havaita se. Kun hyökkäys havaitaan, se voidaan estää.
