@@ -15,7 +15,9 @@ jobs:
     - name: Build
       uses: xu-cheng/latex-action@v2
       with:
-          root_file: latex/thesis.tex
+        working_directory: latex
+        root_file: thesis.tex
+        latexmk_shell_escape: true
 
     - name: Deploy
       uses: Pendect/action-rsyncer@v1.1.0
