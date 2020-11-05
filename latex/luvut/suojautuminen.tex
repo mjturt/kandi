@@ -1,20 +1,20 @@
 \chapter{Kyberhyökkäyksiltä suojautuminen}\label{suojautuminen}
 
-Vaikka keskityn tutkielmassani ensisijaisesti Linux–palvelinten tietoturvan parantamiseen, monet yleiset keinot tietoturvan parantamiseen pätevät myös Linux–palvelinten kontekstissa joten käsittelen myös niitä lopuksi lyhyesti.
+Esittelen seuraavaksi keinoja suojautua aikaisemmin mainittuja kyberhyökkäyksiä vastaan Linux-palvelinten näkökulmasta. Tarjoan myös konkreettisia komentoesimerkkejä näiden toteutukseen Linuxilla.
 
 \section{Salaus}\label{Salaus}
 Tallennustila ja tietoliikenne voidaan kryptografisesti salata. Salaamalla sekokielistä tietoa muutetaan muotoon, jossa vain tarvittavan avaimen haltija pystyy lukemaan tietoja selkokielisinä.
 
-Salaamalla tietoa voidaan estää päätymästä sellaisiin käsiin mihin se ei ole tarkoitettu. Salauksella vahvennetaan tietoturvaa CIA-mallin C-kohdan osalta. Salaamisella voidaan suojautua tietojen päätymiseltä vääriin käsiin esimerkiksi tietokoneen varkauden tai verkon kuuntelun yhteydessä.
+Salaamalla tietoa voidaan estää päätymästä sellaisiin käsiin mihin se ei ole tarkoitettu. Salauksella vahvennetaan tietoturvaa CIA-mallin C-kohdan osalta. Salaamisella voidaan suojautua tietojen päätymiseltä vääriin käsiin esimerkiksi tietokoneen varkauden tai verkon kuuntelun yhteydessä.~\cite{stamp2011information}
 
 \subsection{Tallennustilan salaaminen}\label{tallennustilan_salaaminen}
-Tallennustilan tai yksittäisten tiedostojen salaamisella pyritään ehkäisemään tietojen päätyminen vääriin käsiin tilanteessa jossa laite, jolle tieto on tallennettu, päätyy tahoille joiden ei ole tarkoitus nähdä tietoja. Tilanne on tämä esimerkiksi hyökkäyksessä \ref{theft}. Tallennustilan tai tiedostojen salaamisella voidaan myös pyrkiä suojelemaan jotakin erittäin salaista osaa tiedoista jonka salausta pidetään purettuva vain silloin kun tietoja tarvitaan. Tälläisessä tapauksessa tietojen on mahdollista pysyä pois vääristä käsistä jopa silloin kun hyökkääjä on saanut muutoin täyden hallinnan tietoja säilyttävästä palvelimesta, kuten hyökkäyksissä \ref{backdoors}, \ref{remote_code_execution} ja \ref{bruteforce}.
+Tallennustilan tai yksittäisten tiedostojen salaamisella pyritään ehkäisemään tietojen päätyminen vääriin käsiin tilanteessa jossa laite, jolle tieto on tallennettu, päätyy tahoille joiden ei ole tarkoitus nähdä tietoja. Tilanne on tämä esimerkiksi hyökkäyksessä \ref{theft}. Tallennustilan tai tiedostojen salaamisella voidaan myös pyrkiä suojelemaan jotakin erittäin salaista osaa tiedoista jonka salausta pidetään purettuva vain silloin kun tietoja tarvitaan. Tälläisessä tapauksessa tietojen on mahdollista pysyä pois vääristä käsistä jopa silloin kun hyökkääjä on saanut muutoin täyden hallinnan tietoja säilyttävästä palvelimesta, kuten hyökkäyksissä \ref{backdoors}, \ref{privilege_escalation} ja \ref{bruteforce}.~\cite{stamp2011information}
 
 DMCrypt on Linux-kernelin levysalausjärjestelmä. Järjestelmä on osa laajempaa Device Mapper rajapintaa josta järjestelmän nimikin on johdettu (\textbf{D}evice \textbf{M}apper \textbf{crypt}). Device Mapper on rajapinta jolla voi osoittaa virtuaalisia laitetiedostoja fyysisiin laitetiedostoihin. Tätä teknologiaa DMCrypt hyödyntää salauksessaan. Varsinainen levyosion tai laitteet laitetiedosto on salattu ja sellaisenaan käyttökelvoton. Purkaessaan salauksen DMCrypt luo virtuaalisen laitetiedoston jossa tieto on selkokielisenä ja tämä virtuaalinen osio on valmis liitettäväksi järjestelmään.
 
 Cryptsetup on työkalu levysalauksien hallintaan DMCryptillä. Useita standardeja siitä, missä muodossa salatut osiot tulee olla on useita ja Cryptsetup tukee näistä LUKS:ia, loop-AES:ia, TrueCryptiä ja Microsoftin BitLockeria. Salatun osion muoto määrittelee esimerkiksi sen millainen osion alun salaamaton ylätunniste on. Ylätunniste kertoo lyhyesti ohjeet salauksen purkamiseen, esimerkiksi sen, mitä salausalgoritmia salaukseen on käytetty. Cryptsetup tukee myös ylätunnisteettomia nk. paljaita DMCrypt-osioita. LUKS:ia tyypillisesti suositellaan Linux-järjestelmän osioita salatessa.
 
-Ohjelmalistauksessa~\ref{alg:cryptsetup_salaus} esimerkki levyosion salaamisesta Cryptsetupilla käyttäen salausavaimena salasanaa. Salattava osio on lohkolaitetiedosto \textit{/dev/sda2} ja se on tarkoitus liittää hakemistopuun sijaintiin \textit{/home}.
+Ohjelmalistauksessa~\ref{alg:cryptsetup_salaus} esimerkki levyosion salaamisesta Cryptsetupilla käyttäen salausavaimena salasanaa. Salattava osio on lohkolaitetiedosto \textit{/dev/sda2} ja se on tarkoitus liittää hakemistopuun sijaintiin \textit{/home}.~\cite{cryptsetup}
 
 \begin{algorithm}[tbh]
 \begin{minted}{sh}
@@ -33,7 +33,7 @@ mount /dev/mapper/esim /home
 \end{algorithm}
 \newpage{}
 
-Tietoa voi salata myös tiedostotasolla. Tiedostotason salaukseen on useita työkaluja kuten eCryptFS ja EncFS. eCryptFS on toteutettu Linuxin kerneliin kuten DMCrypt. EncFS on käyttäjätilassa toimiva erillinen sovellus ja huomattavasti helppokäyttöisempi. EncFS:n käyttö on varsin suoraviivaista, ohjelmalistauksessa \ref{alg:encfs_salaus} salataan hakemisto \textit{/home/user/salattava} ja säilötään salattu data hakemistoon \textit{/home/user/.salattu}.
+Tietoa voi salata myös tiedostotasolla. Tiedostotason salaukseen on useita työkaluja kuten eCryptFS ja EncFS. eCryptFS on toteutettu Linuxin kerneliin kuten DMCrypt. EncFS on käyttäjätilassa toimiva erillinen sovellus ja huomattavasti helppokäyttöisempi. EncFS:n käyttö on varsin suoraviivaista, ohjelmalistauksessa \ref{alg:encfs_salaus} salataan hakemisto \textit{/home/user/salattava} ja säilötään salattu data hakemistoon \textit{/home/user/.salattu}.~\cite{encfs}
 
 \begin{algorithm}[tbh]
 \begin{minted}{sh}
@@ -56,7 +56,7 @@ OpenVPN:n avulla voidaan TCP/UDP tasolla tunneloida kaikki tietoliikenne salatun
 \section{Palomuurit}\label{palomuurit}
 Palomuuri (eng. Firewall) on järjestelmä, jonka tarkoitus on estää asiaton pääsy verkkojen välillä. Useimmiten tämä toteutetaan kokoelmalla erilaisia sääntöjä. Palomuureilla voidaan ennaltaehkäistä useita uhkia vastaan pienentämällä hyökkäyspinta-alaa esimerkiksi sulkemalla liikenne kokonaan tiettyihin portteihin tai tietyistä lähteistä. Palomuuria voi myös konfiguroida dynaamisesti, jolloin esimerkiksi kun hyökkäys \ref{dos} tai \ref{bruteforce} havaitaan, liikenne voidaan sulkea näistä lähteistä.
 
-Netfilter on ohjelmistokehys Linux-kernelissä joka on tarkoitettu moniin verkkoyhteyksiin liityvien asioiden hallintaan ja tällä kernelin palomuuri on implementoitu. IPTables on käyttäjätason sovellus hallinnoimaan kernelin palomuurin sääntöjä ja tulee useimpien Linux-jakeluiden mukana. IPTablesin seuraaja on NFTables, mutta siihen että, NFTables otettaisiin laajempaan käyttöön kuin IPTables voi mennä vielä vuosia. IPTablesin syntaksi on vasta-alkajille usein sekava, joten palomuurin hallintaan on myös käyttäjäystävällisempiä ratkaisuja kute UFW.
+Netfilter on ohjelmistokehys Linux-kernelissä joka on tarkoitettu moniin verkkoyhteyksiin liityvien asioiden hallintaan ja tällä kernelin palomuuri on implementoitu. IPTables on käyttäjätason sovellus hallinnoimaan kernelin palomuurin sääntöjä ja tulee useimpien Linux-jakeluiden mukana. IPTablesin seuraaja on NFTables, mutta siihen että, NFTables otettaisiin laajempaan käyttöön kuin IPTables voi mennä vielä vuosia. IPTablesin syntaksi on vasta-alkajille usein sekava, joten palomuurin hallintaan on myös käyttäjäystävällisempiä ratkaisuja kuten UFW.
 
 \section{SELinux}\label{selinux}
 SELinux (Security Enhanced Linux) on Red Hat Enterprise Linuxin\ldots
@@ -77,7 +77,7 @@ Paravirtualisointiin alustaja ovat mm. Docker, Vagrant ja Linuxin chroot-ympäri
 \subsection{Autentikaatio}\label{autentikaatio}
 Autentikaatioprosessia vahventamalla voidaan suojautua esimerkiksi hyökkäykseltä \ref{bruteforce}. Perinteiset keinot suojautua, kuten tarpeeksi vahvan salasanan valitseminen ovat toki tärkeitä, mutta autentikaatioprosessia on myös mahdollista vahventaa järjestelmän konfiguraatioilla ja työkaluilla. Liian heikot salasanat voi olla myös mahdollisia purkaa mikäli hyökkääjä on saanut salasanojen tiivisteet käsiinsä \textit{/etc/shadow}-tiedostosta.
 
-SSH on yleisin protokolla hallinnoida Linux-palvelimia etänä ja estämällä root-käyttäjän kirjautumisen SSH:n ylitse pienentää huomattavasti hyökkäyspinta-alaa. Pääkäyttäjän \textit{root} käyttäjätunnus on aina sama useimmissa UNIX-tyyppisissä järjestelmissä, joten hyökkääjän tarvitsee enää arvata vain salasana hyökkäyksen onnistumiseksi. Ennen \textit{root} käyttäjän kirjautumisen estoa jokin toinen käyttäjä tulisi lisätä \textit{/etc/sudoers}-tiedostoon, jotta operointi pääkäyttäjäoikeuksilla onnistuisi silti SSH:n välityksellä.
+SSH on yleisin protokolla hallinnoida Linux-palvelimia etänä ja estämällä root-käyttäjän kirjautumisen SSH:n ylitse pienentää huomattavasti hyökkäyspinta-alaa. Pääkäyttäjän \textit{root} käyttäjätunnus on aina sama useimmissa UNIX-tyyppisissä järjestelmissä, joten hyökkääjän tarvitsee enää arvata vain salasana hyökkäyksen onnistumiseksi. Ennen \textit{root} käyttäjän kirjautumisen estoa jokin toinen käyttäjä tulisi lisätä \textit{/etc/sudoers}-tiedostoon, jotta operointi pääkäyttäjäoikeuksilla onnistuisi silti SSH:n välityksellä.~\cite{sshd}~\cite{sudo}
 
 \begin{algorithm}[tbh]
 \begin{minted}{sh}
@@ -101,4 +101,4 @@ systemctl restart sshd
 Järjestelmän käyttäjien salasanoille on myös mahdollista asettaa minimivaatimuksia. PAM.cracklib.
 
 \section{Monitorointi}\label{monitorointi}
-Monitoroinnin tarkoitus ei ole niinkään suojautua kyberhyökkäykseltä vaan ennemminkin keino havaita se. Kun hyökkäys havaitaan, se voidaan estää.
+Monitoroinnin tarkoitus ei ole niinkään suojautua kyberhyökkäykseltä vaan ennemminkin keino havaita se. Kun hyökkäys havaitaan, se voidaan keskeyttää. chkrootkit.
