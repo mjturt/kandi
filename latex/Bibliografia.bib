@@ -1,5 +1,6 @@
 % Books
 
+%%% iptables
 @book{binnie2016linux,
   title={Linux Server security: hack and defend},
   author={Binnie, Chris},
@@ -7,18 +8,35 @@
   publisher={Wiley Online Library}
 }
 
-@book{bauer2005linux,
-  title={Linux server security},
-  author={Bauer, Michael D},
-  year={2005},
-  publisher={" O'Reilly Media, Inc."}
+%%% access control
+@book{kalsi2018practical,
+  title={Practical Linux Security Cookbook: Secure your Linux environment from modern-day attacks with practical recipes},
+  author={Kalsi, Tajinder},
+  year={2018},
+  publisher={Packt Publishing Ltd}
+}
+
+%%% brute-force
+@book{beaver2015hacking,
+  title={Hacking for Dummies},
+  author={Beaver, Kevin and Stiennon, Richard},
+  year={2015},
+  publisher={John Wiley \& Sons}
+}
+
+%%% rce, injection
+@book{mcdonald2020web,
+  title={Web Security for Developers: Real Threats, Practical Defense},
+  author={McDonald, Malcom},
+  year={2020},
+  publisher={No Starch Press}
 }
 
 %%% virtualization
-@book{golden2011virtualization,
-  title={Virtualization for dummies},
-  author={Golden, Bernard},
-  year={2011},
+@book{portnoy2016virtualization,
+  title={Virtualization Essentials},
+  author={Portnoy, Matthew},
+  year={2016},
   publisher={John Wiley \& Sons}
 }
 
@@ -28,6 +46,14 @@
   author={Stamp, Mark},
   year={2011},
   publisher={John Wiley \& Sons}
+}
+
+%%% PAM
+@book{kemp2009linux,
+  title={Linux System Administration Recipes: A Problem-solution Approach},
+  author={Kemp, Juliet},
+  year={2009},
+  publisher={Apress}
 }
 
 %%% definition on cyber security & vulnerability
@@ -46,7 +72,7 @@
   publisher={CRC press}
 }
 
-%%% pribilege escalation
+%%% pribilege escalation, network (vpn)
 @book{ciampa2012security+,
   title={Security+ guide to network security fundamentals},
   author={Ciampa, Mark},
@@ -163,6 +189,22 @@
     url = "https://securelist.com/keyloggers-how-they-work-and-how-to-detect-them-part-1/36138/",
     note = {[Verkkolähde; Viitattu 04.11.2020]},
 }
+    
+@online{selinux,
+    author = {{Red Hat, Inc.}},
+    title = {What is SELinux?},
+    year={n.d.},
+    url = "https://www.redhat.com/en/topics/linux/what-is-selinux",
+    note = {[Verkkolähde; Viitattu 19.11.2020]},
+}
+
+@online{xplg,
+    author = {Hussain, Sadequl},
+    title = {LINUX SECURITY MUST-READ GUIDE 2020: HOW TO INVESTIGATE SUSPECTED BREAK-IN ATTEMPTS IN LINUX},
+    year={n.d.},
+    url = "https://www.xplg.com/linux-security-investigate-suspected-break-in/",
+    note = {[Verkkolähde; Viitattu 19.11.2020]},
+}
 
 % Other
 
@@ -209,9 +251,16 @@ institution = {International Organization for Standardization}
 
 @software{sudo,
   author = {Miller, Todd C. and {sudo contributors}},
-  title = {OpenSSH},
+  title = {Sudo},
   url = {https://www.sudo.ws/},
   version = {1.8.3p1},
+}
+
+@software{ufw,
+  author = {{Canonical Ltd.}},
+  title = {UFW},
+  url = {https://launchpad.net/ufw},
+  version = {0.36},
 }
     
 @manual{iostat,
