@@ -1,14 +1,19 @@
 \chapter{Yhteenveto}\label{yhteenveto}
+Olen koonnut taulukkoon~\ref{tab:security-table} hyökkäykset suhteessa suojautumismenetelmiin. Iso \textbf{X} tarkoittaa sitä, suojautumismenetelmä auttaa merkittävästi suojautumaan tietoturvahyökkäykseltä. Pieni \textbf{x} tarkoittaa puolestaan sitä, että menetelmä auttaa suojautumaan hieman tietoturvahyökkäykseltä. Pienen \textbf{x}:n merkintää käytän myös silloin, jos suojautumismenetelmä auttaa merkittävästi vähentämään tietoturvahyökkäyksen aiheuttamaa vahinkoa.
+
+Kuten taulukosta~\ref{tab:security-table} huomaa, esittelemäni suojautumismenetelmät tuntuvat jakautuvan kahden pääryhmän välillä. Ensimmäisen ryhmän suojautumismenetelmät auttavat tehokkaasti, mutta vain yhteen tiettyyn kyberhyökkäykseen. Kun taas toisen ryhmän menetelmät ovat kokonaisvaltaisempia ratkaisuja, jotka auttavat monilla osa-alueilla hieman.
+
+Taulukosta~\ref{tab:security-table} huomataan myös, että joiltain hyökkäyksiltä on hankala suojautua. Tällainen hyökkäys on esimerkiksi palvelunestohyökkäys~(\ref{dos}). Hyökkäykseltä~\ref{dos} pystytään palomuurien (\ref{palomuurit}) avulla suojautumaan vain mikäli hyökkäys tulee yhdestä tai ennalta arvattavista lähteistä.
 
 \begin{table}
 \centering{}\caption{Hyökkäykset vs. suojautumismenetelmät\label{tab:security-table}}
 \begin{tabular}{c|c|c|c|c|c|c|c|}
    &\ref{dos}&\ref{backdoors}&\ref{verkon_kuuntelu}&\ref{privilege_escalation}&\ref{injection}&\ref{bruteforce}&\ref{theft} \tabularnewline\hline
-    Tallennustilan salaaminen~(\ref{tallennustilan_salaaminen}) & & & & & & &\tabularnewline\hline
-    Tietoliikenteen salaaminen~(\ref{tietoliikenteen_salaaminen}) & & & & & & &\tabularnewline\hline
-    Palomuurit~(\ref{palomuurit}) & & & & & & &\tabularnewline\hline
-    Eristys ja virtualisointi~(\ref{eristys_ja_virtualisointi}) & & & & & & &\tabularnewline\hline
-    Autentikaatioprosessin vahvennus~(\ref{autentikaatio}) & & & & & & &\tabularnewline\hline
-    Käyttöoikeuksien vahvennus~(\ref{access_rights}) & & & & & & &\tabularnewline\hline
+    Tallennustilan salaaminen~(\ref{tallennustilan_salaaminen}) & & & & & & & \textbf{X}\tabularnewline\hline
+    Tietoliikenteen salaaminen~(\ref{tietoliikenteen_salaaminen}) & & & \textbf{X} & & & &\tabularnewline\hline
+    Palomuurit~(\ref{palomuurit}) & \textbf{x} & & & & \textbf{x} & \textbf{x} &\tabularnewline\hline
+    Eristys ja virtualisointi~(\ref{eristys_ja_virtualisointi}) & & \textbf{x} & & \textbf{x} & \textbf{x} & \textbf{x} &\tabularnewline\hline
+    Autentikaatioprosessin vahvennus~(\ref{autentikaatio}) & & & & & & \textbf{X} &\tabularnewline\hline
+    Käyttöoikeuksien vahvennus~(\ref{access_rights}) & & \textbf{x} & & \textbf{x} & \textbf{x} & &\tabularnewline\hline
 \end{tabular}
 \end{table}
