@@ -14,7 +14,7 @@ ISO/IEC 27000:2018(E) -standardi~\cite{ISO27000} määrittelee CIA-mallin kohdat
     \item \textbf{Saatavuus}: ``Property of being accessible and usable on demand by an authorized entity''
 \end{itemize}
 
-Luottamuksellisuudella tarkoitetaan siis sitä, että tietoa voivat nähdä vain ne, joilla on siihen oikeus. Eheys on sitä, että tiedon oikeuden ja täydellisyyden varmistamista siltä, että tietoa muokattaisiin luvattomasti. Saatavuudella puolestaan tarkoitetaan sitä, että tieto on saavutettavissa siihen oikeutettujen tahojen toimesta.~\cite{stamp2011information}
+Luottamuksellisuudella tarkoitetaan siis sitä, että tietoa voivat nähdä vain ne, joilla on siihen oikeus. Eheys tiedon oikeuden ja täydellisyyden varmistamista siltä, ettei tietoa ole muokattu luvattomasti. Saatavuudella puolestaan tarkoitetaan sitä, että tieto on saavutettavissa siihen oikeutettujen tahojen toimesta.~\cite{stamp2011information}
 
 \section{Haavoittuvuudet ja kyberhyökkäykset}\label{haavoittuvuudet_ja_kyberhyokkaykset}
 Tietoturva-aukolla eli haavoittuvuudella tarkoitetaan heikkoutta tietokonejärjestelmässä, jonka avulla hyökkääjän on mahdollista päästä tekemään järjestelmässä jotakin mitä hänen ei pitäisi. Kyberhyökkäys tarkoittaa varsinaista toimenpidettä, jossa hyökkääjä käyttää haavoittuvuutta päästäkseen järjestelmään.~\cite{andress2014basics}
@@ -39,7 +39,7 @@ Kuvassa~\ref{github_ddos} toistaiseksi toiseksi suurimman palvelunestohyökkäyk
 \subsection{H2: Takaovet}\customlabel{backdoors}{H2}
 Takaovi (eng. \textit{Backdoor}) on keino ohittaa järjestelmän tyypilliset autentikointimenetelmät. Tyypillisesti takaovi on tietokoneohjelma joka antaa hyökkääjälle hallinnan kohdejärjestelmästään. Esimerkiksi Linux-järjestelmässä takaovella yritetään saada tilanne aikaan, jossa hyökkääjä voi kirjautua sisään kohdejärjestelmälle \textit{root}-oikeuksilla käymättä kuitenkaan läpi normaalia autentikaatioprosessia. Takaovi on ylimääräinen ohjelma, jonka ei kuuluisi olla kohdejärjestelmässä, joten lähtökohtaisesti takaovi vaarantaa CIA-mallin I-osan. Mikäli takaovi mahdollistaa hyökkääjälle \textit{root}-käyttäjän oikeudet, hyökkääjällä on täysi hallinta kohdejärjestelmästä. Edellä mainitun tilanteen voi katsoa vaarantavan kaikki CIA-mallin osa-alueet.
 
-Takaovi asennetaan kohdetietokoneelle esimerkiksi nk.\ troijalaisen mukana. Troijalainen on viattomaksi naamioitu haittaohjelma, esimerkiksi peli, jonka mukana on kuitenkin ohjelmakoodia, joka ei kuulu peliin kuten esimerkiksi takaovi.
+Takaovi asennetaan kohdetietokoneelle esimerkiksi niin kutsutun troijalaisen mukana. Troijalainen on viattomaksi naamioitu haittaohjelma, esimerkiksi peli, jonka mukana on kuitenkin ohjelmakoodia, joka ei kuulu peliin kuten esimerkiksi takaovi.
 
 Takaovia asennetaan myös jo muilla keinoin onnistuneen hyökkäyksen päätteeksi taatakseen hyökkääjällä pääsyn kohdejärjestelmään tulevaisuudessa.~\cite{tipton2007information}
 
